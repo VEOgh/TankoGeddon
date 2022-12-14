@@ -2,33 +2,33 @@
 
 
 #include "TankPawn.h"
+#include "Components/BoxComponent.h"
 
-// Sets default values
+
 ATankPawn::ATankPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	PrimaryActorTick.bCanEverTick = true;
 
-}
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	RootComponent = BoxCollision;
 
-// Called when the game starts or when spawned
-void ATankPawn::BeginPlay()
-{
-	Super::BeginPlay();
+	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
+	BodyMesh->SetupAttachment(BoxCollision);
+
+	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
+	TurretMesh->SetupAttachment(BodyMesh);
+
 	
 }
 
-// Called every frame
+void ATankPawn::BeginPlay()
+{
+	Super::BeginPlay();
+	}
+
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// Called to bind functionality to input
-void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
 

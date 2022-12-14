@@ -6,24 +6,33 @@
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
+class UStaticMeshComponent;
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	ATankPawn();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UStaticMeshComponent* BodyMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UStaticMeshComponent* TurretMesh;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	class UBoxComponent* BoxCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Movement")
+	float MovementSpeed = 100.0f;
+
+	float Speed2 = 100.0f;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };
