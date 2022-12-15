@@ -40,6 +40,17 @@ void ATankPawn::BeginPlay()
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//MoveFaroward
+	FVector currentLocation = GetActorLocation();
+	FVector ForwardVector = GetActorForwardVector();
+	FVector movePosition = currentLocation + ForwardVector * MovementSpeed * ForwardMoveAxisValue * DeltaTime;
+	SetActorLocation(movePosition);
+}
+
+void ATankPawn::MoveForward(float Value)
+{
+	ForwardMoveAxisValue = Value;
 }
 
 

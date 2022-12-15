@@ -2,4 +2,24 @@
 
 
 #include "TankController.h"
+#include "TankPawn.h"
 
+void ATankController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+	TankPawn = Cast<ATankPawn>(InPawn);
+}
+
+void ATankController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	InputComponent -> BindAxis("MoveForward", this, &ATankController::MoveForward);
+}
+
+void ATankController::MoveForward(float Value)
+{
+	if (TankPawn)
+	{
+		TankPawn->MoveForward(Value);
+	}
+}

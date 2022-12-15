@@ -16,6 +16,10 @@ class TANKOGEDDON_API ATankPawn : public APawn
 public:
 	ATankPawn();
 
+	virtual void Tick(float DeltaTime) override;
+
+	void MoveForward(float value);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -34,12 +38,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
 	float MovementSpeed = 100.0f;
 
-	float Speed2 = 100.0f;
+private:
+	float ForwardMoveAxisValue = 0.0f;
 	
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	
 };
