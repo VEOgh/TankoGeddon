@@ -3,6 +3,9 @@
 
 #include "TankPawn.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 
 
 ATankPawn::ATankPawn()
@@ -18,7 +21,15 @@ ATankPawn::ATankPawn()
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BodyMesh);
 
-	
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm-> SetupAttachment(BoxCollision);
+	SpringArm->bDoCollisionTest = false;
+	SpringArm->bInheritPitch = false;
+	SpringArm->bInheritRoll = false;
+	SpringArm->bInheritYaw = false;
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera-> SetupAttachment(SpringArm);
 }
 
 void ATankPawn::BeginPlay()

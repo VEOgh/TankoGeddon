@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
@@ -26,6 +27,12 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	class UBoxComponent* BoxCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	class UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Movement")
 	float MovementSpeed = 100.0f;
