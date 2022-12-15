@@ -25,5 +25,7 @@ private:
 	class ATankPawn* TankPawn;
 
 	void MoveForward(float Value);
+	void MoveRight(float Value);
+	
 	
 };

@@ -19,6 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void MoveForward(float value);
+	void MoveRight(float value);
 
 protected:
 	virtual void BeginPlay() override;
@@ -44,6 +45,6 @@ protected:
 private:
 	float ForwardMoveAxisValue = 0.0f;
 	
+	float RightMoveAxisValue = 0.0f;
 
-	
 };
