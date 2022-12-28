@@ -20,6 +20,7 @@ public:
 
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void RotateRight(float value);
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,9 +43,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
 	float MovementSpeed = 100.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float RotationSpeed = 100.0f;
+
 private:
-	float ForwardMoveAxisValue = 0.0f;
+	class ATankController* TankController;
 	
+	float ForwardMoveAxisValue = 0.0f;
 	float RightMoveAxisValue = 0.0f;
+	float CurrentRightAxisValue = 0.0f;
+	float RotateRightAxisValue = 0.0f;
+	float RotateInterpolationKey = 0.1f;
+	float TurretInterpolationKey = 0.5f;
 
 };
