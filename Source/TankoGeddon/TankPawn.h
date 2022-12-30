@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Cannon.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
@@ -22,6 +23,9 @@ public:
 	void MoveRight(float value);
 	void RotateRight(float value);
 
+	void SetupCannon();
+	void Fire();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -40,6 +44,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	class UCameraComponent* Camera;
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cannon")
+	TSubclassOf<ACannon> CannonClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cannon")
+	class UArrowComponent* CannonSetupPoint;
+
+	UPROPERTY()
+	ACannon* Cannon;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
 	float MovementSpeed = 100.0f;
 
@@ -55,5 +69,6 @@ private:
 	float RotateRightAxisValue = 0.0f;
 	float RotateInterpolationKey = 0.1f;
 	float TurretInterpolationKey = 0.5f;
+	
 
 };
