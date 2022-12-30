@@ -7,9 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TankController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class TANKOGEDDON_API ATankController : public APlayerController
 {
@@ -35,4 +33,5 @@ private:
 	void RotateRight(float value);
 
 	void Fire();
+	void SpecialFire();
 };

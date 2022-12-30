@@ -126,3 +126,11 @@ void ATankPawn::Fire()
 		Cannon->Fire();
 	}
 }
+
+void ATankPawn::SpecialFire()
+{
+	if(Cannon)
+	{
+		Cannon->SpecialFire();
+	}
+}

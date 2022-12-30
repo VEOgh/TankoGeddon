@@ -16,6 +16,7 @@ public:
 	ACannon();
 
 	void Fire();
+	void SpecialFire();
 	void Reload();
 	bool IsReadyToFire();
 
@@ -41,6 +42,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
 	float FireDamage = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
+	float FireAmmo = 9.0f;
 
 private:
 	bool bReadyToFire = false;
