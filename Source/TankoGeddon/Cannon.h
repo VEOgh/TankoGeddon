@@ -16,7 +16,6 @@ public:
 	ACannon();
 
 	void Fire();
-	void SpecialFire();
 	void Reload();
 	bool IsReadyToFire();
 
@@ -30,6 +29,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	class UArrowComponent* ProjectileSpawnPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	TSubclassOf <class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	ECannonType CannonType = ECannonType::FireProjectile;

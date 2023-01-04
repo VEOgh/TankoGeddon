@@ -2,6 +2,8 @@
 
 
 #include "Cannon.h"
+
+#include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 
@@ -29,52 +31,8 @@ void ACannon::BeginPlay()
 	
 }
 
+
 void ACannon::Fire()
-{
-	if(FireAmmo==0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2,FColor::Red, "Out of Ammo");
-	}
-
-	if(!IsReadyToFire())
-	{
-		return;
-	}
-	bReadyToFire = false;
-	
-	if(FireAmmo!=0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2,FColor::Green, FString::Printf(TEXT("Bah Bah %f"), FireAmmo));
-		FireAmmo--;
-	}
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ACannon::Reload, 1 / FireRate, false);
-}
-
-void ACannon::SpecialFire()
-
-{
-	if(!IsReadyToFire())
-	{
-		return;
-	}
-	bReadyToFire = false;
-	
-	
-	if (CannonType == ECannonType::FireProjectile)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Fire projectile")));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Fire trace")));
-	}
-	
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ACannon::Reload, 0.1 / FireRate, false);
-}
-
-
-
-/*void ACannon::Fire()
 {
 	if(!IsReadyToFire())
 	{
@@ -85,15 +43,43 @@ void ACannon::SpecialFire()
 	if (CannonType == ECannonType::FireProjectile)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire projectile")));
+		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
+		if (projectile)
+		{
+			projectile->Start();
+		}
+		
 	}
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Fire trace")));
+		FHitResult hitResult;
+		FCollisionQueryParams traceParams;
+		traceParams.bTraceComplex = true;
+		traceParams.bReturnPhysicalMaterial = false;
+
+		FVector Start = ProjectileSpawnPoint->GetComponentLocation();
+		FVector End = Start + ProjectileSpawnPoint->GetForwardVector() * FireRange;
+
+		if(GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel1, traceParams))
+		{
+			DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Purple, false, 1.0f, 0, 5.0f);
+			if (hitResult.GetActor())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("trace overlap : %s"), *hitResult.GetActor()->GetName());
+				hitResult.GetActor()->Destroy();
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0, 5.0f);
+			}
+				
+		}
 	}
 
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ACannon::Reload, 1 / FireRate, false);
 	
-}*/
+}
 
 void ACannon::Reload()
 {
