@@ -3,25 +3,34 @@
 
 #include "AmmoBox.h"
 
-// Sets default values
+#include "TankPawn.h"
+
+
 AAmmoBox::AAmmoBox()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	
+	PrimaryActorTick.bCanEverTick = false;
+
+	USceneComponent* SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = SceneComp;
+
+	AmmoMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AmmoMesh"));
+	AmmoMesh->SetupAttachment(SceneComp);
+	AmmoMesh->OnComponentBeginOverlap.AddDynamic(this, &AAmmoBox::OnMeshOverlapBegin);
+	AmmoMesh->SetCollisionProfileName("OverlapAll");
+	AmmoMesh->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+	AmmoMesh->SetGenerateOverlapEvents(true);
 
 }
 
-// Called when the game starts or when spawned
-void AAmmoBox::BeginPlay()
+void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AAmmoBox::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	ATankPawn* TankPawn = Cast<ATankPawn>(OtherActor);
+	if (TankPawn)
+	{
+		TankPawn->SetupCannon(CannonClass);
+	}
+	Destroy();
 }
 

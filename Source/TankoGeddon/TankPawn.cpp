@@ -44,7 +44,7 @@ void ATankPawn::BeginPlay()
 	Super::BeginPlay();
 
 	TankController = Cast<ATankController>(GetController());
-	SetupCannon();
+	SetupCannon(CannonClass);
 }
 
 void ATankPawn::Tick(float DeltaTime)
@@ -100,9 +100,10 @@ void ATankPawn::RotateRight(float value)
 	RotateRightAxisValue = value;
 }
 
-void ATankPawn::SetupCannon()
+
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannon)
 {
-	if (!CannonClass)
+	if (!newCannon)
 	{
 		return;
 	}
@@ -114,7 +115,7 @@ void ATankPawn::SetupCannon()
 	FActorSpawnParameters params;
 	params.Instigator = this;
 	params.Owner = this;
-	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
+	Cannon = GetWorld()->SpawnActor<ACannon>(newCannon, params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	
 }
