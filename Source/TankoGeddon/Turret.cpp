@@ -2,13 +2,13 @@
 
 
 #include "Turret.h"
-
+#include "Kismet/KismetMathLibrary.h"
 #include "Cannon.h"
 #include "ENgine/StaticMesh.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+
 
 
 ATurret::ATurret()
@@ -56,24 +56,6 @@ void ATurret::BeginPlay()
 	
 }
 
-void ATurret::Targeting()
-{
-	if(!PlayerPawn)
-	{
-		return;
-	}
-	
-	if (IsPlayerInRange()) 
-	{
-		RotateToPlayer();
-		
-		if (CanFire())
-		{
-			Fire();
-		}
-	}
-}
-
 void ATurret::Destroyed()
 {
 	if (Cannon)
@@ -81,6 +63,25 @@ void ATurret::Destroyed()
 		Cannon->Destroy();
 	}
 }
+
+void ATurret::Targeting()
+{
+	if(!PlayerPawn)
+	{
+		return;
+	}
+	
+	if (IsPlayerInRange())
+	{
+		RotateToPlayer();
+	}
+	
+	if (CanFire())
+	{
+			Fire();
+	}
+}
+
 
 void ATurret::RotateToPlayer()
 {
@@ -99,10 +100,10 @@ bool ATurret::IsPlayerInRange()
 bool ATurret::CanFire()
 {
 	FVector targetingDir = TurretMesh->GetForwardVector();
-	FVector dirToPLayer = PlayerPawn->GetActorLocation() - GetActorLocation();
-	dirToPLayer.Normalize();
+	FVector dirToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
+	dirToPlayer.Normalize();
 
-	float AimAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(targetingDir, dirToPLayer)));
+	float AimAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(targetingDir, dirToPlayer)));
 	return AimAngle <= Accurency;
 }
 
