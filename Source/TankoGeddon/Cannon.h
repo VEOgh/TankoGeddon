@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameStructs.h"
+#include "GameFramework/Actor.h"
+
 #include "Cannon.generated.h"
 
 UCLASS()

@@ -2,10 +2,12 @@
 
 
 #include "Cannon.h"
-
 #include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "TimerManager.h"
+#include "Engine/Engine.h"
+#include "DrawDebugHelpers.h"
 
 
 ACannon::ACannon()
@@ -54,14 +56,14 @@ void ACannon::Fire()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire trace")));
 		FHitResult hitResult;
-		FCollisionQueryParams traceParams;
+		FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("Fire Trace")), true, this);;
 		traceParams.bTraceComplex = true;
 		traceParams.bReturnPhysicalMaterial = false;
 
 		FVector Start = ProjectileSpawnPoint->GetComponentLocation();
-		FVector End = Start + ProjectileSpawnPoint->GetForwardVector() * FireRange;
+		FVector End = ProjectileSpawnPoint->GetForwardVector() * FireRange + Start;
 
-		if(GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECollisionChannel::ECC_Visibility, traceParams))
+		if(GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECollisionChannel::ECC_EngineTraceChannel1, traceParams))
 		{
 			DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Red, false, 1.0f, 0, 5);
 			if (hitResult.GetActor())
@@ -71,7 +73,7 @@ void ACannon::Fire()
 			}
 			else
 			{
-				DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.0f, 0, 5.0f);
+				DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 1.0f, 0, 5.0f);
 			}
 				
 		}

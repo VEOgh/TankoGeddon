@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Cannon.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AmmoBox.generated.h"

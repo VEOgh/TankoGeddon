@@ -62,7 +62,7 @@ void ATankPawn::Tick(float DeltaTime)
 	//BodyRotation
 
 	CurrentRightAxisValue = FMath::Lerp(CurrentRightAxisValue, RotateRightAxisValue, RotateInterpolationKey);
-	UE_LOG(LogTemp, Warning, TEXT("CurrentRightAxisValue %f, RotateRightAxisValue %f"), CurrentRightAxisValue, RotateRightAxisValue);
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentRightAxisValue %f, RotateRightAxisValue %f"), CurrentRightAxisValue, RotateRightAxisValue);
 	
 	float yawRotation = CurrentRightAxisValue * RotationSpeed * DeltaTime;
 	FRotator currentRotation = GetActorRotation();

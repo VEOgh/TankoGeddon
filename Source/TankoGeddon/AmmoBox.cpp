@@ -2,8 +2,10 @@
 
 
 #include "AmmoBox.h"
-
 #include "TankPawn.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 
 AAmmoBox::AAmmoBox()
