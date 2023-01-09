@@ -1,14 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "TankPawn.h"
+#include "Cannon.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "TankController.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Cannon.h"
+#include "HealthComponent.h"
 #include "Components/ArrowComponent.h"
 
 
@@ -37,6 +36,10 @@ ATankPawn::ATankPawn()
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
 	CannonSetupPoint->SetupAttachment(TurretMesh);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::DamageTaked);
 }
 
 void ATankPawn::BeginPlay()
@@ -46,6 +49,8 @@ void ATankPawn::BeginPlay()
 	TankController = Cast<ATankController>(GetController());
 	SetupCannon(CannonClass);
 }
+
+
 
 void ATankPawn::Tick(float DeltaTime)
 {
@@ -126,5 +131,26 @@ void ATankPawn::Fire()
 	{
 		Cannon->Fire();
 	}
+}
+
+
+
+void ATankPawn::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
+}
+
+void ATankPawn::DamageTaked(float Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s taked damage: %f, health: %f"), *GetName(), Value, HealthComponent->GetHealth());
+}
+
+void ATankPawn::Die()
+{
+	if(Cannon)
+	{
+		Cannon->Destroy();
+	}
+	Destroy();
 }
 
