@@ -27,6 +27,9 @@ public:
 	void SetupCannon(TSubclassOf<ACannon> newCannon);
 	void Fire();
 
+	UFUNCTION(BlueprintCallable)
+	class UHealthComponent* GetHealthComponent() const { return HealthComponent; }
+
 	UFUNCTION()
 	virtual void TakeDamage(FDamageData DamageData) override;
 
