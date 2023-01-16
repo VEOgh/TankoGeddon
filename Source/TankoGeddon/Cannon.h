@@ -2,11 +2,18 @@
 
 #pragma once
 
+
+
 #include "CoreMinimal.h"
 #include "GameStructs.h"
+#include "Projectile.h"
+#include "Camera/CameraShakeBase.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
-
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Cannon.generated.h"
+
 
 UCLASS()
 class TANKOGEDDON_API ACannon : public AActor
@@ -37,6 +44,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	ECannonType CannonType = ECannonType::FireProjectile;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
+	UParticleSystemComponent* ShootEffect;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category="Components")
+	UAudioComponent* AudioEffect;
+	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
 	float FireRate = 1.0f;
 
@@ -48,6 +62,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Fire params")
 	float FireAmmo = 9.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UForceFeedbackEffect * ShootForceEffect;
+
+	//TSubclassOf<UCameraShake> ShootShake;
+	UPROPERTY(EditAnywhere)
+TSubclassOf<UCameraShakeBase> ShootShake;
+	
 
 private:
 	bool bReadyToFire = false;

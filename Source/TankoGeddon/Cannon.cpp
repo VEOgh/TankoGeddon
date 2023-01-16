@@ -9,6 +9,8 @@
 #include "TimerManager.h"
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
+#include "Components/AudioComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 ACannon::ACannon()
@@ -23,6 +25,12 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnPoint"));
 	ProjectileSpawnPoint->SetupAttachment(CannonMesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot effect"));
+	ShootEffect-> SetupAttachment(ProjectileSpawnPoint);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio effect"));
+	AudioEffect->SetupAttachment(ProjectileSpawnPoint);
 
 }
 
@@ -43,13 +51,32 @@ void ACannon::Fire()
 	}
 	bReadyToFire = false;
 
+	ShootEffect->ActivateSystem();
+	AudioEffect->Play();
+
+	if(GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		if(ShootForceEffect)
+		{
+			FForceFeedbackParameters shootForceEffectParams;
+			shootForceEffectParams.bLooping = false;
+			shootForceEffectParams.Tag = "shootForceEffectParams";
+			GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, shootForceEffectParams);
+		}
+
+		if(ShootShake)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootShake);
+		}
+	}
+	
 	if (CannonType == ECannonType::FireProjectile)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Fire projectile")));
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 		if (projectile)
 		{
-			projectile->Start();
+			projectile->Start(); 
 		}
 		
 	}
@@ -89,36 +116,7 @@ void ACannon::Fire()
 	
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ACannon::Reload, 1 / FireRate, false);
 }
-// не отображает трейсер 
-	/*{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Fire trace")));
-		FHitResult hitResult;
-		FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("Fire Trace")), true, this);;
-		traceParams.bTraceComplex = true;
-		traceParams.bReturnPhysicalMaterial = false;
 
-		FVector Start = ProjectileSpawnPoint->GetComponentLocation();
-		FVector End = ProjectileSpawnPoint->GetForwardVector() * FireRange + Start;
-
-		if(GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECollisionChannel::ECC_Visibility, traceParams))
-		{
-			DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Purple, false, 1.0f, 0, 5);
-			if (hitResult.GetActor())
-			{
-				UE_LOG(LogTemp, Warning, TEXT("trace overlap : %s"), *hitResult.GetActor()->GetName());
-				hitResult.GetActor()->Destroy();
-			}
-			
-			else
-			{
-				DrawDebugLine (GetWorld(), Start, End, FColor::Red, false, 1.0f, 0, 5.0f);
-			}
-				
-		}
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ACannon::Reload, 1 / FireRate, false);
-	}
-}
-*/
 void ACannon::Reload()
 {
 		bReadyToFire = true;

@@ -37,9 +37,13 @@ ATankPawn::ATankPawn()
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("CannonSetupPoint"));
 	CannonSetupPoint->SetupAttachment(TurretMesh);
 
+	
+
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ATankPawn::DamageTaked);
+
+	
 }
 
 void ATankPawn::BeginPlay()
@@ -49,8 +53,6 @@ void ATankPawn::BeginPlay()
 	TankController = Cast<ATankController>(GetController());
 	SetupCannon(CannonClass);
 }
-
-
 
 void ATankPawn::Tick(float DeltaTime)
 {
@@ -62,7 +64,7 @@ void ATankPawn::Tick(float DeltaTime)
 	FVector RightVector = GetActorRightVector();
 	FVector movePosition = currentLocation + (ForwardVector * MovementSpeed * ForwardMoveAxisValue * DeltaTime) +
 	(RightVector * MovementSpeed * RightMoveAxisValue * DeltaTime);
-	SetActorLocation(movePosition);
+	SetActorLocation(movePosition, true);
 
 	//BodyRotation
 
@@ -79,14 +81,19 @@ void ATankPawn::Tick(float DeltaTime)
 	//TurretRotation
 	 if (TankController)
 	 {
+	 	FVector mousePos = TankController->GetMousePos();
+	 	RotateTurretTo(mousePos);
+	 }
+	 /*{
 	 	FVector MousePos = TankController->GetMousePos();
 	 	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), MousePos);
 	 	FRotator turretRotation = TurretMesh->GetComponentRotation();
+	 	
 	 	targetRotation.Pitch = turretRotation.Pitch;
 	 	targetRotation.Roll = turretRotation.Roll;
 	 	TurretMesh->SetWorldRotation(FMath::Lerp(targetRotation, turretRotation, TurretInterpolationKey));
 	 	
-	 }
+	 }*/
 }
 
 void ATankPawn::MoveForward(float value)
@@ -133,11 +140,31 @@ void ATankPawn::Fire()
 	}
 }
 
+FVector ATankPawn::GetEyesPosition()
+{
+	return CannonSetupPoint->GetComponentLocation();
+}
 
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
 {
 	HealthComponent->TakeDamage(DamageData);
+}
+
+FVector ATankPawn::GetTurretForwardVector()
+{
+	return TurretMesh->GetForwardVector();
+}
+
+void ATankPawn::RotateTurretTo(FVector TargetPosition)
+{
+	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetPosition);
+	FRotator currRotation = TurretMesh->GetComponentRotation();
+	
+	targetRotation.Pitch = currRotation.Pitch;
+	targetRotation.Roll = currRotation.Roll;
+	
+	TurretMesh->SetWorldRotation(FMath::Lerp(currRotation, targetRotation, TurretInterpolationKey));
 }
 
 void ATankPawn::DamageTaked(float Value)

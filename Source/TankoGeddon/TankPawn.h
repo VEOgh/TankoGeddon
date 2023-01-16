@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
@@ -27,11 +27,25 @@ public:
 	void SetupCannon(TSubclassOf<ACannon> newCannon);
 	void Fire();
 
+	FVector GetEyesPosition();
+
+	UFUNCTION()
+	TArray<FVector> GetPatrollingPoints() {return PatrollingPoints;};
+	
+	UFUNCTION()
+	float GetMovementAccurency() {return MovementAccurency; };
+	
 	UFUNCTION(BlueprintCallable)
 	class UHealthComponent* GetHealthComponent() const { return HealthComponent; }
 
 	UFUNCTION()
 	virtual void TakeDamage(FDamageData DamageData) override;
+
+	UFUNCTION()
+	FVector GetTurretForwardVector();
+	
+	UFUNCTION()
+	void RotateTurretTo(FVector TargetPosition);
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,6 +68,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	class UHealthComponent* HealthComponent;
 	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cannon")
 	TSubclassOf<ACannon> CannonClass;
 
@@ -68,6 +83,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
 	float RotationSpeed = 100.0f;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points" , Meta = (MakeEditWidget = true))
+	TArray<FVector> PatrollingPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
+	float MovementAccurency = 50;
 
 	void Die();
 	void DamageTaked(float Value);
