@@ -1,4 +1,3 @@
-
 #include "Turret.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Cannon.h"
@@ -144,5 +143,3 @@ void ATurret::DamageTaked(float Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Turret %s taked damage: %f, health: %f"), *GetName(), Value, HealthComponent->GetHealth());
 }
-
- 
