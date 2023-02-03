@@ -1,4 +1,3 @@
-
 #include "TankPawn.h"
 #include "Cannon.h"
 #include "Components/BoxComponent.h"
@@ -145,6 +144,20 @@ FVector ATankPawn::GetEyesPosition()
 	return CannonSetupPoint->GetComponentLocation();
 }
 
+TArray<FVector> ATankPawn::GetPatrollingPoints()
+{
+	TArray<FVector> points;
+	for (ATargetPoint* point: PatrollingPoints)
+	{
+		points.Add(point->GetActorLocation());
+	}
+	return points;
+}
+
+void ATankPawn::SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints)
+{
+	PatrollingPoints = NewPatrollingPoints;
+}
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
 {
@@ -180,4 +193,3 @@ void ATankPawn::Die()
 	}
 	Destroy();
 }
-

@@ -6,6 +6,7 @@
 #include "Cannon.h"
 #include "DamageTaker.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/TargetPoint.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
@@ -30,7 +31,9 @@ public:
 	FVector GetEyesPosition();
 
 	UFUNCTION()
-	TArray<FVector> GetPatrollingPoints() {return PatrollingPoints;};
+	TArray<FVector> GetPatrollingPoints();
+	
+	void SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints);
 	
 	UFUNCTION()
 	float GetMovementAccurency() {return MovementAccurency; };
@@ -86,13 +89,14 @@ protected:
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points" , Meta = (MakeEditWidget = true))
-	TArray<FVector> PatrollingPoints;
+	TArray<ATargetPoint*> PatrollingPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
 	float MovementAccurency = 50;
 
 	void Die();
 	void DamageTaked(float Value);
+	
 private:
 	class ATankController* TankController;
 	
