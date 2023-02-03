@@ -35,6 +35,8 @@ ATankFactory::ATankFactory()
 void ATankFactory::BeginPlay()
 {
 	Super::BeginPlay();
+	if(LinkedMapLoader)
+		LinkedMapLoader->SetIsActivated(false);
 	
 	FTimerHandle _targetingTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(_targetingTimerHandle, this, &ATankFactory::SpawnNewTank, SpawnTankRate, true, SpawnTankRate);
@@ -47,6 +49,8 @@ void ATankFactory::TakeDamage(FDamageData DamageData)
 
 void ATankFactory::Die()
 {
+	if(LinkedMapLoader)
+		LinkedMapLoader->SetIsActivated(true);
 	Destroy();
 }
 

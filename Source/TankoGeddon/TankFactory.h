@@ -1,9 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "TankPawn.h"
+#include "MapLoader.h"
 #include "Engine/TargetPoint.h"
 #include "GameFramework/Actor.h"
 #include "TankFactory.generated.h"
@@ -35,6 +36,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
 	TArray<ATargetPoint*> TankWayPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
+	AMapLoader* LinkedMapLoader;
 
 public:	
 
